@@ -1,73 +1,115 @@
-# Welcome to your Lovable project
 
-## Project info
+# Link Tracker Admin Panel
 
-**URL**: https://lovable.dev/projects/7b1aca2a-9696-4c26-beef-ffe0cfebf2fd
+A complete link tracking SaaS solution with admin interface for managing shortened links and viewing statistics.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- Create and manage shortened links with white/black URL pairs
+- Track clicks by IP, user agent, country, and bot status
+- View detailed statistics per link
+- Filter clicks by country and bot status
+- Dockerized setup for easy deployment
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7b1aca2a-9696-4c26-beef-ffe0cfebf2fd) and start prompting.
+### Backend
+- Go with Gin web framework
+- PostgreSQL database with pgx driver
+- Containerized with Docker
 
-Changes made via Lovable will be committed automatically to this repo.
+### Frontend
+- React with TypeScript
+- Ant Design UI components
+- Vite build tool
+- React Query for data fetching
 
-**Use your preferred IDE**
+### Infrastructure
+- Docker Compose for orchestration
+- Nginx for serving frontend
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Project Structure
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```
+.
+├── docker-compose.yml         # Docker Compose configuration
+├── Dockerfile                 # Frontend Dockerfile
+├── nginx.conf                 # Nginx configuration
+├── backend/                   # Go backend
+│   ├── Dockerfile             # Backend Dockerfile
+│   ├── main.go                # Main application entry
+│   ├── handlers.go            # API handlers
+│   ├── db.go                  # Database connection and models
+│   └── migrations/            # SQL migrations
+│       ├── 000001_create_clicks.up.sql
+│       ├── 000001_create_clicks.down.sql
+│       ├── 000002_create_links.up.sql
+│       └── 000002_create_links.down.sql
+└── src/                       # Frontend React application
+    ├── App.tsx                # Main application component
+    ├── api.ts                 # API client
+    └── components/            # React components
+        ├── ClicksTable.tsx    # Clicks listing with filters
+        ├── LinksTable.tsx     # Links listing with stats button
+        └── LinkForm.tsx       # Create new link form
+```
 
-Follow these steps:
+## Getting Started
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+1. Clone the repository
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Create `.env` file from example
+   ```
+   cp .env.example .env
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+3. Start the application with Docker Compose
+   ```
+   docker-compose up -d
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+4. Access the admin panel at http://localhost
+
+## Development
+
+### Backend
+
+To run the backend locally:
+
+```
+cd backend
+go mod download
+go run .
+```
+
+### Frontend
+
+To run the frontend development server:
+
+```
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Testing
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Backend Tests
 
-**Use GitHub Codespaces**
+```
+cd backend
+go test ./...
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Frontend Tests
 
-## What technologies are used for this project?
+```
+npm test
+```
 
-This project is built with:
+## Deployment
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+The application is fully containerized and can be deployed on any platform that supports Docker.
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/7b1aca2a-9696-4c26-beef-ffe0cfebf2fd) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+```
+docker-compose -f docker-compose.yml up -d
+```

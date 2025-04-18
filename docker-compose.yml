@@ -1,0 +1,58 @@
+
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:14-alpine
+    container_name: link_tracker_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: linkuser
+      POSTGRES_PASSWORD: linkpassword
+      POSTGRES_DB: linktracker
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U linkuser -d linktracker"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: link_tracker_backend
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: linkuser
+      DB_PASSWORD: linkpassword
+      DB_NAME: linktracker
+      PORT: 8080
+      GIN_MODE: release
+    ports:
+      - "8080:8080"
+
+  # Frontend Admin Panel
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: link_tracker_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
